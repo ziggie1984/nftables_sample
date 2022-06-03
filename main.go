@@ -17,7 +17,7 @@ func main() {
 		os.Exit(1)
 	} else {
 		fmt.Println("nftables initialized")
-		fmt.Printf("Connection %v", clientNFT)
+		fmt.Printf("Connection %v, %v", clientNFT.NetNS, clientNFT.TestDial)
 
 	}
 
