@@ -60,4 +60,6 @@ func main() {
 		fmt.Printf("Chain: %v\n", value)
 	}
 
+	clientNFT.Flush()
+
 }
