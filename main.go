@@ -141,7 +141,7 @@ func main() {
 
 	rules, _ := c.GetRules(filter, prerouting)
 
-	for i, r := range rules {
+	for _, r := range rules {
 		rr, _ := r.Exprs[0].(*expr.Verdict)
 
 		fmt.Println(rr)
