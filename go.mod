@@ -1,4 +1,4 @@
-module github.com/ziggie1984/nftables
+module github.com/ziggie1984/nftables_sample
 
 go 1.18
 
