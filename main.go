@@ -27,12 +27,13 @@ func main() {
 
 	// }
 
-	wgTable := nftables.Table{
+	wgTable := &nftables.Table{
 		Name:   "testtable",
 		Family: nftables.TableFamilyINet,
 	}
+	clientNFT.AddTable(wgTable)
 
-	prerouting := nftables.Chain{
+	prerouting := &nftables.Chain{
 		Name:     "testchain",
 		Table:    &wgTable,
 		Hooknum:  nftables.ChainHookPrerouting,
@@ -40,8 +41,7 @@ func main() {
 		Type:     nftables.ChainTypeNAT,
 	}
 	fmt.Printf("Chain Self-Created: %v\n", prerouting)
-	clientNFT.AddTable(&wgTable)
-	clientNFT.AddChain(&prerouting)
+	prerouting := clientNFT.AddChain(prerouting)
 
 	tables, error := clientNFT.ListTables()
 	if error != nil {
@@ -76,13 +76,13 @@ func main() {
 
 	set := &nftables.Set{
 		Name:    "whitelist",
-		Table:   &wgTable,
+		Table:   wgTable,
 		KeyType: nftables.TypeIPAddr, // our keys are IPv4 addresses
 	}
 
 	clientNFT.AddRule(&nftables.Rule{
-		Table: &wgTable,
-		Chain: &prerouting,
+		Table: wgTable,
+		Chain: prerouting,
 		Exprs: []expr.Any{
 			// [ payload load 4b @ network header + 16 => reg 1 ]
 			&expr.Payload{
