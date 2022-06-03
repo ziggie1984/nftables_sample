@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/networkplumbing/go-nft/nft"
+	"github.com/google/nftables"
+	"github.com/google/nftables/expr"
 )
 
 func main() {
@@ -75,16 +76,75 @@ func main() {
 	// // clientNFT.AddRule(&rule)
 
 	// clientNFT.Flush()
+	c := &nftables.Conn{}
 
-	config := nft.NewConfig()
-	table := nft.NewTable("mytable", nft.FamilyIP)
-	config.AddTable(table)
-	chain := nft.NewRegularChain(table, "mychain")
-	config.AddChain(chain)
-	// rule := nft.NewRule(table, chain, statements, nil, nil, "mycomment")
-	err := nft.ApplyConfig(config)
-	if err != nil {
-		fmt.Println("Error applying nftables")
+	filter := c.AddTable(&nftables.Table{
+		Family: nftables.TableFamilyIPv4,
+		Name:   "filter",
+	})
+
+	prerouting := c.AddChain(&nftables.Chain{
+		Name:     "base-chain",
+		Table:    filter,
+		Type:     nftables.ChainTypeFilter,
+		Hooknum:  nftables.ChainHookPrerouting,
+		Priority: nftables.ChainPriorityFilter,
+	})
+
+	c.AddRule(&nftables.Rule{
+		Table: filter,
+		Chain: prerouting,
+		Exprs: []expr.Any{
+			&expr.Verdict{
+				// [ immediate reg 0 drop ]
+				Kind: expr.VerdictDrop,
+			},
+		},
+	})
+
+	c.AddRule(&nftables.Rule{
+		Table: filter,
+		Chain: prerouting,
+		Exprs: []expr.Any{
+			&expr.Verdict{
+				// [ immediate reg 0 drop ]
+				Kind: expr.VerdictDrop,
+			},
+		},
+	})
+
+	c.InsertRule(&nftables.Rule{
+		Table: filter,
+		Chain: prerouting,
+		Exprs: []expr.Any{
+			&expr.Verdict{
+				// [ immediate reg 0 accept ]
+				Kind: expr.VerdictAccept,
+			},
+		},
+	})
+
+	c.InsertRule(&nftables.Rule{
+		Table: filter,
+		Chain: prerouting,
+		Exprs: []expr.Any{
+			&expr.Verdict{
+				// [ immediate reg 0 queue ]
+				Kind: expr.VerdictQueue,
+			},
+		},
+	})
+
+	if err := c.Flush(); err != nil {
+		t.Fatal(err)
+	}
+
+	rules, _ := c.GetRules(filter, prerouting)
+
+	for i, r := range rules {
+		rr, _ := r.Exprs[0].(*expr.Verdict)
+
+		fmt.Println(rr)
 	}
 
 }
