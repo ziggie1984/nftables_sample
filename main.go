@@ -48,6 +48,8 @@ func main() {
 
 	clientNFT.AddChain(&prerouting)
 
-	clientNFT.Flush()
+	error = clientNFT.Flush()
+
+	fmt.Printf("Flush Error: %v\n", error)
 
 }
