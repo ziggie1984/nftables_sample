@@ -29,4 +29,21 @@ func main() {
 		fmt.Printf("Chain: %v\n", value)
 	}
 
+	wgTable := nftables.Table{
+		Name:   "wg0",
+		Family: nftables.TableFamilyINet,
+	}
+
+	policy := nftables.ChainPolicyAccept
+	prerouting := nftables.Chain{
+		Name:     "FUCKYOUCHAIN",
+		Table:    &wgTable,
+		Hooknum:  nftables.ChainHookPrerouting,
+		Priority: nftables.ChainPriorityNATDest,
+		Type:     nftables.ChainTypeNAT,
+		Policy:   &policy,
+	}
+
+	clientNFT.AddChain(&prerouting)
+
 }
