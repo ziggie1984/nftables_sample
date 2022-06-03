@@ -35,7 +35,7 @@ func main() {
 	policy := nftables.ChainPolicyAccept
 	prerouting := nftables.Chain{
 		Name:     "FUCKYOUCHAIN",
-		Table:    &wgTable,
+		Table:    table,
 		Hooknum:  nftables.ChainHookPrerouting,
 		Priority: nftables.ChainPriorityNATDest,
 		Type:     nftables.ChainTypeNAT,
