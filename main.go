@@ -136,7 +136,7 @@ func main() {
 	})
 
 	if err := c.Flush(); err != nil {
-		t.Fatal(err)
+		fmt.Println(err)
 	}
 
 	rules, _ := c.GetRules(filter, prerouting)
