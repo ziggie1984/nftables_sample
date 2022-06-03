@@ -11,7 +11,10 @@ func main() {
 
 	clientNFT, error := nftables.New()
 
-	// defer clientNFT.CloseLasting()
+	defer func() {
+		clientNFT.Flush()
+		clientNFT.CloseLasting()
+	}()
 
 	if error != nil {
 		fmt.Println("Error Initializing nftables", error)
@@ -27,7 +30,6 @@ func main() {
 		Family: nftables.TableFamilyINet,
 	}
 	table := clientNFT.AddTable(&wgTable)
-	clientNFT.Flush()
 	fmt.Printf("Table wg0: %v\n", table.Name)
 
 	policy := nftables.ChainPolicyAccept
