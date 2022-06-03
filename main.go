@@ -10,28 +10,30 @@ import (
 
 func main() {
 
-	option := nftables.AsLasting()
+	// option := nftables.AsLasting()
 
-	clientNFT, error := nftables.New(option)
+	// clientNFT, error := nftables.New(option)
+
+	clientNFT := &nftables.Conn{}
 
 	defer clientNFT.CloseLasting()
 
-	if error != nil {
-		fmt.Println("Error Initializing nftables", error)
-		os.Exit(1)
-	} else {
-		fmt.Println("nftables initialized")
-		fmt.Printf("Connection %v, %v\n", clientNFT.NetNS, clientNFT.TestDial)
+	// if error != nil {
+	// 	fmt.Println("Error Initializing nftables", error)
+	// 	os.Exit(1)
+	// } else {
+	// 	fmt.Println("nftables initialized")
+	// 	fmt.Printf("Connection %v, %v\n", clientNFT.NetNS, clientNFT.TestDial)
 
-	}
+	// }
 
 	wgTable := nftables.Table{
-		Name:   "wg0",
+		Name:   "testtable",
 		Family: nftables.TableFamilyINet,
 	}
 
 	prerouting := nftables.Chain{
-		Name:     "FUCKYOUCHAIN",
+		Name:     "testchain",
 		Table:    &wgTable,
 		Hooknum:  nftables.ChainHookPrerouting,
 		Priority: nftables.ChainPriorityNATDest,
