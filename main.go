@@ -17,7 +17,7 @@ func main() {
 		os.Exit(1)
 	} else {
 		fmt.Println("nftables initialized")
-		fmt.Printf("Connection %v, %v", clientNFT.NetNS, clientNFT.TestDial)
+		fmt.Printf("Connection %v, %v\n", clientNFT.NetNS, clientNFT.TestDial)
 
 	}
 
@@ -37,7 +37,7 @@ func main() {
 		Type:     nftables.ChainTypeNAT,
 		Policy:   &policy,
 	}
-	fmt.Printf("Chain Self-Created: %v\n", table.Name)
+	fmt.Printf("Chain Self-Created: %v\n", prerouting)
 
 	clientNFT.AddChain(&prerouting)
 
