@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net"
 
 	"github.com/google/nftables"
@@ -161,5 +162,10 @@ func main() {
 	})
 	if err := c.Flush(); err != nil {
 		// handle error
+		fmt.Println("Error Flushing Ruleset", err)
+	} else {
+		fmt.Println("Flushing Ruleset was successful")
+
 	}
+
 }
