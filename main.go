@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/google/nftables"
+	"github.com/google/nftables/expr"
 )
 
 func main() {
@@ -13,7 +14,7 @@ func main() {
 
 	clientNFT, error := nftables.New(option)
 
-	// defer clientNFT.CloseLasting()
+	defer clientNFT.CloseLasting()
 
 	if error != nil {
 		fmt.Println("Error Initializing nftables", error)
@@ -59,6 +60,17 @@ func main() {
 	for _, value := range chains {
 		fmt.Printf("Chain: %v\n", value)
 	}
+
+	rule := nftables.Rule{
+		Table: &wgTable,
+		Chain: &prerouting,
+		// The list of possible flags are specified by nftnl_rule_attr, see
+		// https://git.netfilter.org/libnftnl/tree/include/libnftnl/rule.h#n21
+		// Current nftables go implementation supports only
+		// NFTNL_RULE_POSITION flag for setting rule at position 0
+		Exprs: []expr.Any{},
+	}
+	clientNFT.AddRule(&rule)
 
 	clientNFT.Flush()
 
