@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/google/nftables"
-	"github.com/google/nftables/expr"
 )
 
 func main() {
@@ -13,24 +12,24 @@ func main() {
 
 	// // clientNFT, error := nftables.New(option)
 
-	// clientNFT := &nftables.Conn{}
+	clientNFT := &nftables.Conn{}
 
-	// defer clientNFT.CloseLasting()
+	defer clientNFT.CloseLasting()
 
-	// // if error != nil {
-	// // 	fmt.Println("Error Initializing nftables", error)
-	// // 	os.Exit(1)
-	// // } else {
-	// // 	fmt.Println("nftables initialized")
-	// // 	fmt.Printf("Connection %v, %v\n", clientNFT.NetNS, clientNFT.TestDial)
+	// if error != nil {
+	// 	fmt.Println("Error Initializing nftables", error)
+	// 	os.Exit(1)
+	// } else {
+	// 	fmt.Println("nftables initialized")
+	// 	fmt.Printf("Connection %v, %v\n", clientNFT.NetNS, clientNFT.TestDial)
 
-	// // }
-
-	// wgTable := &nftables.Table{
-	// 	Name:   "testtable",
-	// 	Family: nftables.TableFamilyINet,
 	// }
-	// clientNFT.AddTable(wgTable)
+
+	wgTable := &nftables.Table{
+		Name:   "wg0",
+		Family: nftables.TableFamilyINet,
+	}
+	clientNFT.AddTable(wgTable)
 
 	// prerouting := &nftables.Chain{
 	// 	Name:     "testchain",
@@ -76,76 +75,76 @@ func main() {
 	// // clientNFT.AddRule(&rule)
 
 	// clientNFT.Flush()
-	c := &nftables.Conn{}
-	defer c.CloseLasting()
+	// c := &nftables.Conn{}
+	// defer c.CloseLasting()
 
-	filter := c.AddTable(&nftables.Table{
-		Family: nftables.TableFamilyIPv4,
-		Name:   "filter",
-	})
+	// filter := c.AddTable(&nftables.Table{
+	// 	Family: nftables.TableFamilyIPv4,
+	// 	Name:   "filter",
+	// })
 
-	prerouting := c.AddChain(&nftables.Chain{
-		Name:     "base-chain",
-		Table:    filter,
-		Type:     nftables.ChainTypeFilter,
-		Hooknum:  nftables.ChainHookPrerouting,
-		Priority: nftables.ChainPriorityFilter,
-	})
+	// prerouting := c.AddChain(&nftables.Chain{
+	// 	Name:     "base-chain",
+	// 	Table:    filter,
+	// 	Type:     nftables.ChainTypeFilter,
+	// 	Hooknum:  nftables.ChainHookPrerouting,
+	// 	Priority: nftables.ChainPriorityFilter,
+	// })
 
-	c.AddRule(&nftables.Rule{
-		Table: filter,
-		Chain: prerouting,
-		Exprs: []expr.Any{
-			&expr.Verdict{
-				// [ immediate reg 0 drop ]
-				Kind: expr.VerdictAccept,
-			},
-		},
-	})
+	// c.AddRule(&nftables.Rule{
+	// 	Table: filter,
+	// 	Chain: prerouting,
+	// 	Exprs: []expr.Any{
+	// 		&expr.Verdict{
+	// 			// [ immediate reg 0 drop ]
+	// 			Kind: expr.VerdictAccept,
+	// 		},
+	// 	},
+	// })
 
-	c.AddRule(&nftables.Rule{
-		Table: filter,
-		Chain: prerouting,
-		Exprs: []expr.Any{
-			&expr.Verdict{
-				// [ immediate reg 0 drop ]
-				Kind: expr.VerdictAccept,
-			},
-		},
-	})
+	// c.AddRule(&nftables.Rule{
+	// 	Table: filter,
+	// 	Chain: prerouting,
+	// 	Exprs: []expr.Any{
+	// 		&expr.Verdict{
+	// 			// [ immediate reg 0 drop ]
+	// 			Kind: expr.VerdictAccept,
+	// 		},
+	// 	},
+	// })
 
-	c.InsertRule(&nftables.Rule{
-		Table: filter,
-		Chain: prerouting,
-		Exprs: []expr.Any{
-			&expr.Verdict{
-				// [ immediate reg 0 accept ]
-				Kind: expr.VerdictAccept,
-			},
-		},
-	})
+	// c.InsertRule(&nftables.Rule{
+	// 	Table: filter,
+	// 	Chain: prerouting,
+	// 	Exprs: []expr.Any{
+	// 		&expr.Verdict{
+	// 			// [ immediate reg 0 accept ]
+	// 			Kind: expr.VerdictAccept,
+	// 		},
+	// 	},
+	// })
 
-	c.InsertRule(&nftables.Rule{
-		Table: filter,
-		Chain: prerouting,
-		Exprs: []expr.Any{
-			&expr.Verdict{
-				// [ immediate reg 0 queue ]
-				Kind: expr.VerdictAccept,
-			},
-		},
-	})
+	// c.InsertRule(&nftables.Rule{
+	// 	Table: filter,
+	// 	Chain: prerouting,
+	// 	Exprs: []expr.Any{
+	// 		&expr.Verdict{
+	// 			// [ immediate reg 0 queue ]
+	// 			Kind: expr.VerdictAccept,
+	// 		},
+	// 	},
+	// })
 
-	if err := c.Flush(); err != nil {
+	if err := clientNFT.Flush(); err != nil {
 		fmt.Println(err)
 	}
 
-	rules, _ := c.GetRules(filter, prerouting)
+	// rules, _ := c.GetRules(filter, prerouting)
 
-	for _, r := range rules {
-		rr, _ := r.Exprs[0].(*expr.Verdict)
+	// for _, r := range rules {
+	// 	rr, _ := r.Exprs[0].(*expr.Verdict)
 
-		fmt.Println(rr)
-	}
+	// 	fmt.Println(rr)
+	// }
 
 }
