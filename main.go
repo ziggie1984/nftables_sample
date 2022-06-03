@@ -63,16 +63,46 @@ func main() {
 		fmt.Printf("Chain: %v\n", value)
 	}
 
-	rule := nftables.Rule{
+	// rule := nftables.Rule{
+	// 	Table: &wgTable,
+	// 	Chain: &prerouting,
+	// 	// The list of possible flags are specified by nftnl_rule_attr, see
+	// 	// https://git.netfilter.org/libnftnl/tree/include/libnftnl/rule.h#n21
+	// 	// Current nftables go implementation supports only
+	// 	// NFTNL_RULE_POSITION flag for setting rule at position 0
+	// 	Exprs: []expr.Any{},
+	// }
+	// clientNFT.AddRule(&rule)
+
+	set := &nftables.Set{
+		Name:    "whitelist",
+		Table:   &wgTable,
+		KeyType: nftables.TypeIPAddr, // our keys are IPv4 addresses
+	}
+
+	clientNFT.AddRule(&nftables.Rule{
 		Table: &wgTable,
 		Chain: &prerouting,
-		// The list of possible flags are specified by nftnl_rule_attr, see
-		// https://git.netfilter.org/libnftnl/tree/include/libnftnl/rule.h#n21
-		// Current nftables go implementation supports only
-		// NFTNL_RULE_POSITION flag for setting rule at position 0
-		Exprs: []expr.Any{},
-	}
-	clientNFT.AddRule(&rule)
+		Exprs: []expr.Any{
+			// [ payload load 4b @ network header + 16 => reg 1 ]
+			&expr.Payload{
+				DestRegister: 1,
+				Base:         expr.PayloadBaseNetworkHeader,
+				Offset:       16,
+				Len:          4,
+			},
+			// [ lookup reg 1 set whitelist ]
+			&expr.Lookup{
+				SourceRegister: 1,
+				SetName:        set.Name,
+				SetID:          set.ID,
+			},
+			//[ immediate reg 0 drop ]
+			&expr.Verdict{
+				Kind: expr.VerdictDrop,
+			},
+		},
+	})
 
 	clientNFT.Flush()
 
