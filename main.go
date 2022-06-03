@@ -48,4 +48,6 @@ func main() {
 
 	clientNFT.AddChain(&prerouting)
 
+	clientNFT.Flush()
+
 }
