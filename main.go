@@ -12,7 +12,7 @@ func main() {
 	if error != nil {
 		fmt.Println("Error Initializing nftables", error)
 	} else {
-		fmt.Println("nftables initialized")
+		fmt.Println("nftables initialized", clientNFT)
 
 	}
 
