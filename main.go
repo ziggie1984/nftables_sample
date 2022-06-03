@@ -19,16 +19,6 @@ func main() {
 
 	}
 
-	chains, error := clientNFT.ListChains()
-	if error != nil {
-		fmt.Println("Error Getting Chains", error)
-		os.Exit(1)
-	}
-
-	for _, value := range chains {
-		fmt.Printf("Chain: %v\n", value)
-	}
-
 	wgTable := nftables.Table{
 		Name:   "wg0",
 		Family: nftables.TableFamilyINet,
@@ -48,8 +38,16 @@ func main() {
 
 	clientNFT.AddChain(&prerouting)
 
-	error = clientNFT.Flush()
+	clientNFT.Flush()
 
-	fmt.Printf("Flush Error: %v\n", error)
+	chains, error := clientNFT.ListChains()
+	if error != nil {
+		fmt.Println("Error Getting Chains", error)
+		os.Exit(1)
+	}
+
+	for _, value := range chains {
+		fmt.Printf("Chain: %v\n", value)
+	}
 
 }
