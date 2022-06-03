@@ -10,12 +10,14 @@ import (
 func main() {
 
 	clientNFT, error := nftables.New()
+
 	defer clientNFT.CloseLasting()
 	if error != nil {
 		fmt.Println("Error Initializing nftables", error)
 		os.Exit(1)
 	} else {
 		fmt.Println("nftables initialized")
+		fmt.Printf("Connection %v", clientNFT)
 
 	}
 
