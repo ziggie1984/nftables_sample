@@ -97,7 +97,7 @@ func main() {
 		Exprs: []expr.Any{
 			&expr.Verdict{
 				// [ immediate reg 0 drop ]
-				Kind: expr.VerdictDrop,
+				Kind: expr.VerdictAccept,
 			},
 		},
 	})
@@ -108,7 +108,7 @@ func main() {
 		Exprs: []expr.Any{
 			&expr.Verdict{
 				// [ immediate reg 0 drop ]
-				Kind: expr.VerdictDrop,
+				Kind: expr.VerdictAccept,
 			},
 		},
 	})
@@ -130,7 +130,7 @@ func main() {
 		Exprs: []expr.Any{
 			&expr.Verdict{
 				// [ immediate reg 0 queue ]
-				Kind: expr.VerdictQueue,
+				Kind: expr.VerdictAccept,
 			},
 		},
 	})
