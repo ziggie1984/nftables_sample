@@ -40,6 +40,16 @@ func main() {
 
 	clientNFT.Flush()
 
+	tables, error := clientNFT.ListTables()
+	if error != nil {
+		fmt.Println("Error Getting Chains", error)
+		os.Exit(1)
+	}
+
+	for _, value := range tables {
+		fmt.Printf("Table: %v\n", value)
+	}
+
 	chains, error := clientNFT.ListChains()
 	if error != nil {
 		fmt.Println("Error Getting Chains", error)
