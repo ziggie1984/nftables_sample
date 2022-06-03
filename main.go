@@ -35,13 +35,13 @@ func main() {
 
 	prerouting := &nftables.Chain{
 		Name:     "testchain",
-		Table:    &wgTable,
+		Table:    wgTable,
 		Hooknum:  nftables.ChainHookPrerouting,
 		Priority: nftables.ChainPriorityNATDest,
 		Type:     nftables.ChainTypeNAT,
 	}
 	fmt.Printf("Chain Self-Created: %v\n", prerouting)
-	prerouting := clientNFT.AddChain(prerouting)
+	prerouting = clientNFT.AddChain(prerouting)
 
 	tables, error := clientNFT.ListTables()
 	if error != nil {
