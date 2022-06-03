@@ -9,7 +9,9 @@ import (
 
 func main() {
 
-	clientNFT, error := nftables.New()
+	option := nftables.AsLasting()
+
+	clientNFT, error := nftables.New(option)
 
 	defer func() {
 		clientNFT.Flush()
