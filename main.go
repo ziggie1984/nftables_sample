@@ -9,9 +9,9 @@ import (
 
 func main() {
 
-	// option := nftables.AsLasting()
+	option := nftables.AsLasting()
 
-	clientNFT, error := nftables.New()
+	clientNFT, error := nftables.New(option)
 
 	// defer clientNFT.CloseLasting()
 
