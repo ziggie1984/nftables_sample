@@ -19,10 +19,11 @@ func main() {
 
 	}
 
-	chains, error := clientNFT. ListChains()
+	chains, error := clientNFT.ListChains()
 	if error != nil {
 		fmt.Println("Error Getting Chains", error)
 		os.Exit(1)
+	}
 
 	for index, value := range chains {
 		fmt.Printf("Chain: %v\n", value)
