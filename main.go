@@ -25,7 +25,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	for index, value := range chains {
+	for _, value := range chains {
 		fmt.Printf("Chain: %v\n", value)
 	}
 
