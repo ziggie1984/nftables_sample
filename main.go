@@ -34,7 +34,7 @@ func main() {
 		Family: nftables.TableFamilyINet,
 	}
 	table := clientNFT.AddTable(&wgTable)
-	fmt.Printf("Table wg0: %v\n", table)
+	fmt.Printf("Table wg0: %v\n", table.Name)
 
 	policy := nftables.ChainPolicyAccept
 	prerouting := nftables.Chain{
