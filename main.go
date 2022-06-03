@@ -13,7 +13,7 @@ func main() {
 
 	clientNFT, error := nftables.New()
 
-	defer clientNFT.CloseLasting()
+	// defer clientNFT.CloseLasting()
 
 	if error != nil {
 		fmt.Println("Error Initializing nftables", error)
