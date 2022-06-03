@@ -29,20 +29,16 @@ func main() {
 		Name:   "wg0",
 		Family: nftables.TableFamilyINet,
 	}
-	table := clientNFT.AddTable(&wgTable)
-	fmt.Printf("Table wg0: %v\n", table.Name)
 
-	policy := nftables.ChainPolicyAccept
 	prerouting := nftables.Chain{
 		Name:     "FUCKYOUCHAIN",
-		Table:    table,
+		Table:    &wgTable,
 		Hooknum:  nftables.ChainHookPrerouting,
 		Priority: nftables.ChainPriorityNATDest,
 		Type:     nftables.ChainTypeNAT,
-		Policy:   &policy,
 	}
 	fmt.Printf("Chain Self-Created: %v\n", prerouting)
-
+	clientNFT.AddTable(&wgTable)
 	clientNFT.AddChain(&prerouting)
 
 	clientNFT.Flush()
