@@ -40,8 +40,6 @@ func main() {
 	clientNFT.AddTable(&wgTable)
 	clientNFT.AddChain(&prerouting)
 
-	clientNFT.Flush()
-
 	tables, error := clientNFT.ListTables()
 	if error != nil {
 		fmt.Println("Error Getting Chains", error)
