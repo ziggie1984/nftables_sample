@@ -77,6 +77,7 @@ func main() {
 
 	// clientNFT.Flush()
 	c := &nftables.Conn{}
+	defer c.CloseLasting()
 
 	filter := c.AddTable(&nftables.Table{
 		Family: nftables.TableFamilyIPv4,
