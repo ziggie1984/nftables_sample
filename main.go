@@ -37,6 +37,7 @@ func main() {
 		Type:     nftables.ChainTypeNAT,
 		Policy:   &policy,
 	}
+	fmt.Printf("Chain Self-Created: %v\n", table.Name)
 
 	clientNFT.AddChain(&prerouting)
 
