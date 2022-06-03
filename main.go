@@ -33,6 +33,7 @@ func main() {
 		Name:   "wg0",
 		Family: nftables.TableFamilyINet,
 	}
+	clientNFT.AddTable(&wgTable)
 
 	policy := nftables.ChainPolicyAccept
 	prerouting := nftables.Chain{
