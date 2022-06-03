@@ -2,28 +2,29 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/google/nftables"
 )
 
 func main() {
 
-	// // option := nftables.AsLasting()
+	option := nftables.AsLasting()
 
-	// // clientNFT, error := nftables.New(option)
+	clientNFT, error := nftables.New(option)
 
-	clientNFT := &nftables.Conn{}
+	// clientNFT := &nftables.Conn{}
 
 	defer clientNFT.CloseLasting()
 
-	// if error != nil {
-	// 	fmt.Println("Error Initializing nftables", error)
-	// 	os.Exit(1)
-	// } else {
-	// 	fmt.Println("nftables initialized")
-	// 	fmt.Printf("Connection %v, %v\n", clientNFT.NetNS, clientNFT.TestDial)
+	if error != nil {
+		fmt.Println("Error Initializing nftables", error)
+		os.Exit(1)
+	} else {
+		fmt.Println("nftables initialized")
+		fmt.Printf("Connection %v, %v\n", clientNFT.NetNS, clientNFT.TestDial)
 
-	// }
+	}
 
 	wgTable := &nftables.Table{
 		Name:   "wg0",
@@ -31,17 +32,17 @@ func main() {
 	}
 	clientNFT.AddTable(wgTable)
 
-	// prerouting := &nftables.Chain{
-	// 	Name:     "testchain",
-	// 	Table:    wgTable,
-	// 	Hooknum:  nftables.ChainHookPrerouting,
-	// 	Priority: nftables.ChainPriorityNATDest,
-	// 	Type:     nftables.ChainTypeNAT,
-	// }
-	// fmt.Printf("Chain Self-Created: %v\n", prerouting)
-	// prerouting = clientNFT.AddChain(prerouting)
+	prerouting := &nftables.Chain{
+		Name:     "testchain",
+		Table:    wgTable,
+		Hooknum:  nftables.ChainHookPrerouting,
+		Priority: nftables.ChainPriorityNATDest,
+		Type:     nftables.ChainTypeNAT,
+	}
+	fmt.Printf("Chain Self-Created: %v\n", prerouting)
+	prerouting = clientNFT.AddChain(prerouting)
 
-	// clientNFT.Flush()
+	clientNFT.Flush()
 
 	// tables, error := clientNFT.ListTables()
 	// if error != nil {
@@ -135,9 +136,9 @@ func main() {
 	// 	},
 	// })
 
-	if err := clientNFT.Flush(); err != nil {
-		fmt.Println(err)
-	}
+	// if err := clientNFT.Flush(); err != nil {
+	// 	fmt.Println(err)
+	// }
 
 	// rules, _ := c.GetRules(filter, prerouting)
 
