@@ -28,7 +28,7 @@ func main() {
 
 	wgTable := &nftables.Table{
 		Name:   "wg0",
-		Family: nftables.TableFamilyINet,
+		Family: nftables.TableFamilyIPv4,
 	}
 	clientNFT.AddTable(wgTable)
 	clientNFT.Flush()
@@ -36,13 +36,33 @@ func main() {
 	prerouting := clientNFT.AddChain(&nftables.Chain{
 		Name:     "base-chain",
 		Table:    wgTable,
-		Type:     nftables.ChainTypeNAT,
-		Hooknum:  nftables.ChainHookInput,
+		Type:     nftables.ChainTypeRoute,
+		Hooknum:  nftables.ChainHookOutput,
 		Priority: nftables.ChainPriorityNATDest,
 	})
 
 	fmt.Printf("Chain Self-Created: %v\n", prerouting)
 	prerouting = clientNFT.AddChain(prerouting)
+
+	clientNFT.Flush()
+
+	wgTableInet := &nftables.Table{
+		Name:   "wg0_inet",
+		Family: nftables.TableFamilyINet,
+	}
+
+	clientNFT.AddTable(wgTableInet)
+	clientNFT.Flush()
+
+	preroutingInet := clientNFT.AddChain(&nftables.Chain{
+		Name:     "base-chain",
+		Table:    wgTableInet,
+		Type:     nftables.ChainTypeRoute,
+		Hooknum:  nftables.ChainHookOutput,
+		Priority: nftables.ChainPriorityNATDest,
+	})
+
+	clientNFT.AddChain(preroutingInet)
 
 	clientNFT.Flush()
 
