@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/binary"
 	"fmt"
+	"net"
 	"os"
 
 	"github.com/google/nftables"
@@ -27,7 +28,7 @@ func covInt16Byte(port uint16) []byte {
 
 func concIpv4Port(ip []byte, port []byte) []byte {
 
-	b := make([]byte, 6)
+	b := make([]byte, 8)
 	fmt.Println(port)
 	copy(b, ip)
 	copy(b[4:], port)
@@ -111,7 +112,7 @@ func settingUpFirewall() {
 
 	error = nftClient.SetAddElements(portFw, []nftables.SetElement{{
 		Key: covInt16Byte(8888),
-		Val: []byte{1, 1, 1, 1, 0, 0, 2, 2},
+		Val: concIpv4Port(net.ParseIP("9.9.9.9"), covInt16Byte(9735)),
 	}})
 
 	if error != nil {
