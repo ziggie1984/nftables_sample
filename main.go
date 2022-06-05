@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net"
 	"os"
 
 	"github.com/google/nftables"
@@ -87,8 +88,9 @@ func settingUpFirewall() {
 		fmt.Println(error)
 	}
 
-	concatbyte := []byte(".")
-	fmt.Printf("%x", concatbyte)
+	ip := net.ParseIP("1.1.1.1")
+
+	fmt.Printf("Type: %T, Value: %v\n", ip, ip)
 	error = nftClient.SetAddElements(portFw, []nftables.SetElement{{
 		Key: []byte{1, 1},
 		Val: []byte{1, 1, 1, 1, 1, 1, 1, 1},
