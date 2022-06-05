@@ -61,15 +61,24 @@ func settingUpFirewall() {
 	nftClient.AddSet(portFw, []nftables.SetElement{})
 	nftClient.Flush()
 
+	portFw_1 := &nftables.Set{
+		Name:          "DNAT_LNPorts_Set",
+		Table:         wgTable,
+		IsMap:         false,
+		Concatenation: false,
+		KeyType:       nftables.TypeIPAddr,
+	}
+	nftClient.AddSet(portFw_1, []nftables.SetElement{})
+	nftClient.Flush()
+
 	//Add A Sample Element
 
 	ip := net.ParseIP("1.1.1.1")
 	fmt.Printf("%v, %x\n", ip, ip)
 
-	element := []byte("1.1.1.1 . 8080")
+	// element := []byte("1.1.1.1 . 8080")
 
-	error = nftClient.SetAddElements(portFw, []nftables.SetElement{{Key: ip,
-		Val: element, KeyEnd: []byte{1}}})
+	error = nftClient.SetAddElements(portFw_1, []nftables.SetElement{{Key: ip}})
 
 	if error != nil {
 		fmt.Println(error)
