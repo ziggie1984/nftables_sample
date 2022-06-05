@@ -1,14 +1,14 @@
 package main
 
 import (
+	"encoding/binary"
 	"fmt"
-	"net"
 	"os"
 
 	"github.com/google/nftables"
 )
 
-const networkIf = "tunnelsats"
+// const networkIf = "tunnelsats"
 
 func main() {
 	settingUpFirewall()
@@ -80,7 +80,13 @@ func settingUpFirewall() {
 
 	// element := []byte("1.1.1.1 . 8080")
 
-	error = nftClient.SetAddElements(portFw_1, []nftables.SetElement{{Key: []byte{1, 1},
+	i := uint16(2000)
+
+	b := make([]byte, 2)
+
+	binary.BigEndian.PutUint16(b, i)
+
+	error = nftClient.SetAddElements(portFw_1, []nftables.SetElement{{Key: b,
 		Val: []byte{1, 2}}})
 	nftClient.Flush()
 
@@ -88,9 +94,6 @@ func settingUpFirewall() {
 		fmt.Println(error)
 	}
 
-	ip := net.ParseIP("1.1.1.1")
-
-	fmt.Printf("Type: %T, Value: %x\n", ip.To4(), ip.To4())
 	error = nftClient.SetAddElements(portFw, []nftables.SetElement{{
 		Key: []byte{1, 1},
 		Val: []byte{1, 1, 1, 1, 1, 1, 1, 1},
