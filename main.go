@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"net"
 	"os"
 
 	"github.com/google/nftables"
@@ -78,7 +77,7 @@ func settingUpFirewall() {
 
 	// element := []byte("1.1.1.1 . 8080")
 
-	error = nftClient.SetAddElements(portFw_1, []nftables.SetElement{{Key: net.ParseIP("1.1.1.2")}})
+	error = nftClient.SetAddElements(portFw_1, []nftables.SetElement{{Key: []byte{1, 1, 1, 1}}})
 
 	if error != nil {
 		fmt.Println(error)
