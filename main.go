@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"net"
 	"os"
 
 	"github.com/google/nftables"
@@ -63,8 +62,20 @@ func settingUpFirewall() {
 
 	//Add A Sample Element
 
-	nftClient.SetAddElements(portFw, []nftables.SetElement{{Key: []byte{255},
-		Val: net.ParseIP("1.1.1.1")}})
+	// ip := net.ParseIP("1.1.1.1")
+
+	bytearray := []byte{255, 255, 255, 255, 255}
+
+	error = nftClient.SetAddElements(portFw, []nftables.SetElement{{Key: []byte{255},
+		Val: bytearray}})
+
+	if error != nil {
+		fmt.Println(error)
+	}
+
+	if err := nftClient.Flush(); err != nil {
+		fmt.Println(err)
+	}
 
 	// prerouting := nftClient.AddChain(&nftables.Chain{
 	// 	Name:     "base-chain",
@@ -97,9 +108,6 @@ func settingUpFirewall() {
 
 	// nftClient.AddChain(preroutingInet)
 
-	if err := nftClient.Flush(); err != nil {
-		fmt.Println(err)
-	}
 	// tables, error := nftClient.ListTables()
 	// if error != nil {
 	// 	fmt.Println("Error Getting Chains", error)
