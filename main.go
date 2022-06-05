@@ -112,7 +112,7 @@ func settingUpFirewall() {
 
 	error = nftClient.SetAddElements(portFw, []nftables.SetElement{{
 		Key: covInt16Byte(8888),
-		Val: concIpv4Port(net.ParseIP("9.9.9.9"), covInt16Byte(9735)),
+		Val: concIpv4Port(net.ParseIP("9.9.9.9").To4(), covInt16Byte(9735)),
 	}})
 
 	if error != nil {
