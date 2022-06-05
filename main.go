@@ -29,6 +29,7 @@ func covInt16Byte(port uint16) []byte {
 func concIpv4Port(ip []byte, port []byte) []byte {
 
 	b := make([]byte, 6)
+	fmt.Println(port)
 	copy(b, ip)
 	copy(b[4:], port)
 	fmt.Println(b)
