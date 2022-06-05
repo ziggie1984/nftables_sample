@@ -82,6 +82,14 @@ func settingUpFirewall() {
 	if error != nil {
 		fmt.Println(error)
 	}
+	error = nftClient.SetAddElements(portFw, []nftables.SetElement{{
+		Key: []byte{1, 1},
+		Val: []byte{1, 1, 1, 1, 1, 1},
+	}})
+
+	if error != nil {
+		fmt.Println(error)
+	}
 
 	if err := nftClient.Flush(); err != nil {
 		fmt.Println(err)
