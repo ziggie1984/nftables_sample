@@ -20,7 +20,7 @@ func covInt16Byte(port uint16) []byte {
 
 	b := make([]byte, 2)
 
-	binary.BigEndian.PutUint16(b, Port)
+	binary.BigEndian.PutUint16(b, port)
 
 	return b
 
