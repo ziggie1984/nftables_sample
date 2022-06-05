@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net"
 	"os"
 
 	"github.com/google/nftables"
@@ -62,7 +63,9 @@ func settingUpFirewall() {
 
 	//Add A Sample Element
 
-	// ip := net.ParseIP("1.1.1.1")
+	ip := net.ParseIP("1.1.1.1")
+
+	fmt.Println(ip)
 
 	bytearray := []byte{255, 255, 255, 255, 255}
 
