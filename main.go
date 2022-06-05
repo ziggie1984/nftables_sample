@@ -63,7 +63,6 @@ func settingUpFirewall() {
 	portFw_1 := &nftables.Set{
 		Name:     "DNAT_LNPorts_Set",
 		Table:    wgTable,
-		IsMap:    true,
 		KeyType:  nftables.TypeInetService,
 		DataType: nftables.TypeIPAddr,
 	}
