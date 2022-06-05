@@ -64,8 +64,7 @@ func settingUpFirewall() {
 	//Add A Sample Element
 
 	ip := net.ParseIP("1.1.1.1")
-
-	fmt.Println(ip)
+	fmt.Printf("%v, %x\n", ip, ip)
 
 	bytearray := []byte{255, 255, 255, 255, 255}
 
