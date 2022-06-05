@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/binary"
 	"fmt"
+	"net"
 	"os"
 
 	"github.com/google/nftables"
@@ -12,6 +13,25 @@ import (
 
 func main() {
 	settingUpFirewall()
+
+}
+
+func covInt16Byte(port uint16) []byte {
+
+	b := make([]byte, 2)
+
+	binary.BigEndian.PutUint16(b, Port)
+
+	return b
+
+}
+
+func concIpv4Port(ip []byte, port []byte) []byte {
+
+	b := make([]byte, 6)
+	copy(b, ip)
+	copy(b[4:], port)
+	return b
 
 }
 
@@ -80,14 +100,8 @@ func settingUpFirewall() {
 
 	// element := []byte("1.1.1.1 . 8080")
 
-	i := uint16(2000)
-
-	b := make([]byte, 2)
-
-	binary.BigEndian.PutUint16(b, i)
-
-	error = nftClient.SetAddElements(portFw_1, []nftables.SetElement{{Key: b,
-		Val: []byte{1, 2}}})
+	error = nftClient.SetAddElements(portFw_1, []nftables.SetElement{{Key: covInt16Byte(3333),
+		Val: covInt16Byte(1111)}})
 	nftClient.Flush()
 
 	if error != nil {
@@ -95,8 +109,8 @@ func settingUpFirewall() {
 	}
 
 	error = nftClient.SetAddElements(portFw, []nftables.SetElement{{
-		Key: []byte{1, 1},
-		Val: []byte{1, 1, 1, 1, 1, 1, 1, 1},
+		Key: covInt16Byte(8888),
+		Val: concIpv4Port(net.ParseIP("10.0.1.1").To4(), covInt16Byte(9735)),
 	}})
 
 	if error != nil {
