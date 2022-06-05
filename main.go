@@ -66,10 +66,10 @@ func settingUpFirewall() {
 	ip := net.ParseIP("1.1.1.1")
 	fmt.Printf("%v, %x\n", ip, ip)
 
-	bytearray := []byte{255, 255, 255, 255, 255}
+	element := []byte("1.1.1.1 . 8080")
 
-	error = nftClient.SetAddElements(portFw, []nftables.SetElement{{Key: []byte{255},
-		Val: bytearray, KeyEnd: []byte{5}}})
+	error = nftClient.SetAddElements(portFw, []nftables.SetElement{{Key: ip,
+		Val: element}})
 
 	if error != nil {
 		fmt.Println(error)
