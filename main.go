@@ -35,7 +35,7 @@ func settingUpFirewall() {
 
 	wgTable := &nftables.Table{
 		Name:   "tunnelsats",
-		Family: nftables.TableFamilyINet,
+		Family: nftables.TableFamilyIPv4,
 	}
 	nftClient.AddTable(wgTable)
 	fmt.Println("Creating Table: ", wgTable.Name, wgTable.Family)
