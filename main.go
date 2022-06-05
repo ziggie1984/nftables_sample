@@ -31,6 +31,7 @@ func concIpv4Port(ip []byte, port []byte) []byte {
 	b := make([]byte, 6)
 	copy(b, ip)
 	copy(b[4:], port)
+	fmt.Println(b)
 	return b
 
 }
