@@ -91,7 +91,7 @@ func settingUpFirewall() {
 	fmt.Printf("%x", concatbyte)
 	error = nftClient.SetAddElements(portFw, []nftables.SetElement{{
 		Key: []byte{1, 1},
-		Val: []byte{1, 1, 1, 1, 46, 1, 1},
+		Val: []byte{1, 1, 1, 1, 1, 1},
 	}})
 
 	if error != nil {
