@@ -68,13 +68,16 @@ func settingUpFirewall() {
 		Concatenation: false,
 		KeyType:       nftables.TypeIPAddr,
 	}
-	nftClient.AddSet(portFw_1, []nftables.SetElement{})
+	error = nftClient.AddSet(portFw_1, []nftables.SetElement{
+		{Key: net.ParseIP("1.1.1.1")}})
+	if error != nil {
+		// handle error
+		fmt.Println(error)
+
+	}
 	nftClient.Flush()
 
 	//Add A Sample Element
-
-	ip := net.ParseIP("1.1.1.1")
-	fmt.Printf("%v, %x\n", ip, ip)
 
 	// element := []byte("1.1.1.1 . 8080")
 
