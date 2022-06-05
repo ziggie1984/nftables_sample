@@ -7,67 +7,97 @@ import (
 	"github.com/google/nftables"
 )
 
+const networkIf = "tunnelsats"
+
 func main() {
+
+}
+
+func settingUpFirewall() {
+
+	//Setup WG Table and Add Rule to Forward Chain
 
 	option := nftables.AsLasting()
 
-	clientNFT, error := nftables.New(option)
+	nftClient, error := nftables.New(option)
 
-	// clientNFT := &nftables.Conn{}
-
-	defer clientNFT.CloseLasting()
+	defer nftClient.CloseLasting()
 
 	if error != nil {
 		fmt.Println("Error Initializing nftables", error)
 		os.Exit(1)
 	} else {
-		fmt.Println("nftables initialized")
-		fmt.Printf("Connection %v, %v\n", clientNFT.NetNS, clientNFT.TestDial)
+		fmt.Println("nftables connection established")
+		fmt.Printf("Connection %v\n", nftClient)
 
 	}
 
 	wgTable := &nftables.Table{
-		Name:   "wg0",
-		Family: nftables.TableFamilyIPv4,
-	}
-	clientNFT.AddTable(wgTable)
-	clientNFT.Flush()
-
-	prerouting := clientNFT.AddChain(&nftables.Chain{
-		Name:     "base-chain",
-		Table:    wgTable,
-		Type:     nftables.ChainTypeRoute,
-		Hooknum:  nftables.ChainHookOutput,
-		Priority: nftables.ChainPriorityNATDest,
-	})
-
-	fmt.Printf("Chain Self-Created: %v\n", prerouting)
-	prerouting = clientNFT.AddChain(prerouting)
-
-	clientNFT.Flush()
-
-	wgTableInet := &nftables.Table{
-		Name:   "wg0_inet",
+		Name:   "tunnelsats",
 		Family: nftables.TableFamilyINet,
 	}
+	nftClient.AddTable(wgTable)
+	fmt.Println("Creating Table: ", wgTable.Name, wgTable.Family)
+	nftClient.Flush()
 
-	clientNFT.AddTable(wgTableInet)
-	clientNFT.Flush()
+	//Adding Set
+	datatypes := []nftables.SetDatatype{nftables.TypeIPAddr, nftables.TypeInetService}
+	concat, err := nftables.ConcatSetType(datatypes...)
+	if err != nil {
+		fmt.Printf("Error %v\n", err)
 
-	preroutingInet := clientNFT.AddChain(&nftables.Chain{
-		Name:     "base-chain",
-		Table:    wgTableInet,
-		Type:     nftables.ChainTypeRoute,
-		Hooknum:  nftables.ChainHookOutput,
-		Priority: nftables.ChainPriorityNATDest,
-	})
+	}
 
-	clientNFT.AddChain(preroutingInet)
+	portFw := &nftables.Set{
+		Name:          "DNAT_LNPorts",
+		Table:         wgTable,
+		IsMap:         true,
+		Concatenation: true,
+		KeyType:       nftables.TypeInetService,
+		DataType:      concat,
+	}
+	nftClient.AddSet(portFw, []nftables.SetElement{})
+	nftClient.Flush()
 
-	if err := clientNFT.Flush(); err != nil {
+	//Add A Sample Element
+
+	// nftClient.SetAddElements(portFw, nftables.SetElement{})
+
+	// prerouting := nftClient.AddChain(&nftables.Chain{
+	// 	Name:     "base-chain",
+	// 	Table:    wgTable,
+	// 	Type:     nftables.ChainTypeRoute,
+	// 	Hooknum:  nftables.ChainHookOutput,
+	// 	Priority: nftables.ChainPriorityNATDest,
+	// })
+
+	// fmt.Printf("Chain Self-Created: %v\n", prerouting)
+	// prerouting = nftClient.AddChain(prerouting)
+
+	// nftClient.Flush()
+
+	// wgTableInet := &nftables.Table{
+	// 	Name:   "wg0_inet",
+	// 	Family: nftables.TableFamilyINet,
+	// }
+
+	// nftClient.AddTable(wgTableInet)
+	// nftClient.Flush()
+
+	// preroutingInet := nftClient.AddChain(&nftables.Chain{
+	// 	Name:     "base-chain",
+	// 	Table:    wgTableInet,
+	// 	Type:     nftables.ChainTypeRoute,
+	// 	Hooknum:  nftables.ChainHookOutput,
+	// 	Priority: nftables.ChainPriorityNATDest,
+	// })
+
+	// nftClient.AddChain(preroutingInet)
+
+	if err := nftClient.Flush(); err != nil {
 		fmt.Println(err)
 	}
-	// tables, error := clientNFT.ListTables()
+	// tables, error := nftClient.ListTables()
 	// if error != nil {
 	// 	fmt.Println("Error Getting Chains", error)
 	// 	os.Exit(1)
@@ -77,7 +107,7 @@ func main() {
 	// 	fmt.Printf("Table: %v\n", value)
 	// }
 
-	// chains, error := clientNFT.ListChains()
+	// chains, error := nftClient.ListChains()
 	// if error != nil {
 	// 	fmt.Println("Error Getting Chains", error)
 	// 	os.Exit(1)
@@ -96,9 +126,9 @@ func main() {
 	// // 	// NFTNL_RULE_POSITION flag for setting rule at position 0
 	// // 	Exprs: []expr.Any{},
 	// // }
-	// // clientNFT.AddRule(&rule)
+	// // nftClient.AddRule(&rule)
 
-	// clientNFT.Flush()
+	// nftClient.Flush()
 	// c := &nftables.Conn{}
 	// defer c.CloseLasting()
 
@@ -159,7 +189,7 @@ func main() {
 	// 	},
 	// })
 
-	// if err := clientNFT.Flush(); err != nil {
+	// if err := nftClient.Flush(); err != nil {
 	// 	fmt.Println(err)
 	// }
 
