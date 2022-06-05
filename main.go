@@ -10,6 +10,7 @@ import (
 const networkIf = "tunnelsats"
 
 func main() {
+	settingUpFirewall()
 
 }
 
