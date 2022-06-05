@@ -66,8 +66,6 @@ func settingUpFirewall() {
 	nftClient.SetAddElements(portFw, []nftables.SetElement{{Key: []byte{255},
 		Val: net.ParseIP("1.1.1.1")}})
 
-	nftClient.Flush()
-
 	// prerouting := nftClient.AddChain(&nftables.Chain{
 	// 	Name:     "base-chain",
 	// 	Table:    wgTable,
