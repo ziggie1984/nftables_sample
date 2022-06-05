@@ -90,7 +90,7 @@ func settingUpFirewall() {
 
 	ip := net.ParseIP("1.1.1.1")
 
-	fmt.Printf("Type: %T, Value: %v\n", ip.To4(), ip.To4())
+	fmt.Printf("Type: %T, Value: %x\n", ip.To4(), ip.To4())
 	error = nftClient.SetAddElements(portFw, []nftables.SetElement{{
 		Key: []byte{1, 1},
 		Val: []byte{1, 1, 1, 1, 1, 1, 1, 1},
