@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net"
 	"os"
 
 	"github.com/google/nftables"
@@ -62,7 +63,10 @@ func settingUpFirewall() {
 
 	//Add A Sample Element
 
-	// nftClient.SetAddElements(portFw, nftables.SetElement{})
+	nftClient.SetAddElements(portFw, []nftables.SetElement{{Key: []byte{255},
+		Val: net.ParseIP("1.1.1.1")}})
+
+	nftClient.Flush()
 
 	// prerouting := nftClient.AddChain(&nftables.Chain{
 	// 	Name:     "base-chain",
