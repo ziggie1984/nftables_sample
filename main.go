@@ -66,8 +66,7 @@ func settingUpFirewall() {
 		Table:   wgTable,
 		KeyType: nftables.TypeIPAddr,
 	}
-	error = nftClient.AddSet(portFw_1, []nftables.SetElement{
-		{Key: net.ParseIP("1.1.1.1")}})
+	error = nftClient.AddSet(portFw_1, []nftables.SetElement{})
 	if error != nil {
 		// handle error
 		fmt.Println(error)
